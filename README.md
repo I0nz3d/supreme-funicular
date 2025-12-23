@@ -24,6 +24,14 @@ This is a complete, production-ready SaaS application with all features implemen
 - **REST API**: Full API access for integrations (Pro and Enterprise plans)
 - **Responsive UI**: Modern, mobile-friendly interface
 
+## 👋 New to Programming?
+
+If you're not familiar with programming, check out the **[Beginner's Guide](BEGINNER_GUIDE.md)** for step-by-step instructions with screenshots and simple explanations!
+
+**Quick start for beginners:**
+- Windows: Double-click `start.bat`
+- Mac/Linux: Run `./start.sh` in Terminal
+
 ## 📋 Prerequisites
 
 - Node.js (v14 or higher)
