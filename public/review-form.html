@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Review - ReviewHub</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .review-form-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 1rem 0;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input:checked ~ label {
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1>ReviewHub</h1>
+            </div>
+        </div>
+    </nav>
+
+    <div class="review-form-container">
+        <h2>Leave a Review</h2>
+        <p>Share your experience with this business</p>
+        
+        <form id="reviewForm" onsubmit="submitReview(event)">
+            <div class="form-group">
+                <label>Business ID (for demo)</label>
+                <input type="text" id="businessId" placeholder="Enter business ID" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="customerName" placeholder="John Doe" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Your Email</label>
+                <input type="email" id="customerEmail" placeholder="john@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Rating</label>
+                <div class="star-rating">
+                    <input type="radio" name="rating" value="5" id="star5" required>
+                    <label for="star5">★</label>
+                    <input type="radio" name="rating" value="4" id="star4">
+                    <label for="star4">★</label>
+                    <input type="radio" name="rating" value="3" id="star3">
+                    <label for="star3">★</label>
+                    <input type="radio" name="rating" value="2" id="star2">
+                    <label for="star2">★</label>
+                    <input type="radio" name="rating" value="1" id="star1">
+                    <label for="star1">★</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Review Title</label>
+                <input type="text" id="title" placeholder="Great experience!">
+            </div>
+            
+            <div class="form-group">
+                <label>Your Review</label>
+                <textarea id="comment" rows="5" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;" placeholder="Tell us about your experience..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn-primary btn-block">Submit Review</button>
+        </form>
+        
+        <div id="reviewMessage" class="message"></div>
+    </div>
+
+    <script>
+        const API_URL = window.location.origin + '/api';
+        
+        async function submitReview(event) {
+            event.preventDefault();
+            
+            const businessId = document.getElementById('businessId').value;
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const rating = document.querySelector('input[name="rating"]:checked').value;
+            const title = document.getElementById('title').value;
+            const comment = document.getElementById('comment').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        businessId,
+                        customerName,
+                        customerEmail,
+                        rating: parseInt(rating),
+                        title,
+                        comment
+                    })
+                });
+                
+                const data = await response.json();
+                
+                const messageEl = document.getElementById('reviewMessage');
+                if (data.success) {
+                    messageEl.textContent = 'Thank you! Your review has been submitted successfully.';
+                    messageEl.className = 'message success';
+                    messageEl.style.display = 'block';
+                    document.getElementById('reviewForm').reset();
+                } else {
+                    messageEl.textContent = data.message || 'Failed to submit review. Please try again.';
+                    messageEl.className = 'message error';
+                    messageEl.style.display = 'block';
+                }
+                
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 5000);
+            } catch (error) {
+                const messageEl = document.getElementById('reviewMessage');
+                messageEl.textContent = 'An error occurred. Please try again.';
+                messageEl.className = 'message error';
+                messageEl.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
