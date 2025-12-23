@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
 const errorHandler = require('./middleware/error');
+const { apiLimiter } = require('./middleware/rateLimiter');
 
 // Connect to database
 connectDB();
@@ -19,6 +20,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Apply rate limiting to all API routes
+app.use('/api', apiLimiter);
 
 // Serve static files
 app.use(express.static('public'));

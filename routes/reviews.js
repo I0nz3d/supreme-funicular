@@ -9,8 +9,9 @@ const {
   deleteReview
 } = require('../controllers/reviewController');
 const { protect } = require('../middleware/auth');
+const { reviewLimiter } = require('../middleware/rateLimiter');
 
-router.post('/', createReview);
+router.post('/', reviewLimiter, createReview);
 router.get('/business/:businessId', getBusinessReviews);
 router.get('/:id', protect, getReview);
 router.put('/:id/status', protect, updateReviewStatus);
