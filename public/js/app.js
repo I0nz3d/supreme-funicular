@@ -208,13 +208,34 @@ async function loadDashboard(user) {
                 data.data.recentReviews.forEach(review => {
                     const reviewEl = document.createElement('div');
                     reviewEl.className = 'review-item';
-                    reviewEl.innerHTML = `
-                        <div class="review-rating">${'⭐'.repeat(review.rating)}</div>
-                        <h4>${review.title || 'No title'}</h4>
-                        <p><strong>${review.customerName}</strong> - ${new Date(review.createdAt).toLocaleDateString()}</p>
-                        <p>${review.comment}</p>
-                        <p><small>Status: ${review.status}</small></p>
-                    `;
+                    
+                    const ratingDiv = document.createElement('div');
+                    ratingDiv.className = 'review-rating';
+                    ratingDiv.textContent = '⭐'.repeat(review.rating);
+                    
+                    const titleH4 = document.createElement('h4');
+                    titleH4.textContent = review.title || 'No title';
+                    
+                    const infoP = document.createElement('p');
+                    const nameStrong = document.createElement('strong');
+                    nameStrong.textContent = review.customerName;
+                    infoP.appendChild(nameStrong);
+                    infoP.appendChild(document.createTextNode(' - ' + new Date(review.createdAt).toLocaleDateString()));
+                    
+                    const commentP = document.createElement('p');
+                    commentP.textContent = review.comment;
+                    
+                    const statusP = document.createElement('p');
+                    const statusSmall = document.createElement('small');
+                    statusSmall.textContent = 'Status: ' + review.status;
+                    statusP.appendChild(statusSmall);
+                    
+                    reviewEl.appendChild(ratingDiv);
+                    reviewEl.appendChild(titleH4);
+                    reviewEl.appendChild(infoP);
+                    reviewEl.appendChild(commentP);
+                    reviewEl.appendChild(statusP);
+                    
                     reviewsList.appendChild(reviewEl);
                 });
             }

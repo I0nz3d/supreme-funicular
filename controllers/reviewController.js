@@ -115,7 +115,7 @@ exports.updateReviewStatus = async (req, res) => {
     }
 
     // Check if user owns the business this review belongs to
-    if (req.user.businessId.toString() !== review.businessId.toString() && req.user.role !== 'admin') {
+    if (!req.user.businessId || (req.user.businessId.toString() !== review.businessId.toString() && req.user.role !== 'admin')) {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
@@ -145,7 +145,7 @@ exports.respondToReview = async (req, res) => {
     }
 
     // Check if user owns the business this review belongs to
-    if (req.user.businessId.toString() !== review.businessId.toString() && req.user.role !== 'admin') {
+    if (!req.user.businessId || (req.user.businessId.toString() !== review.businessId.toString() && req.user.role !== 'admin')) {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
